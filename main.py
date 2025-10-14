@@ -75,7 +75,8 @@ def recibir_update():
     return "ok", 200
 
 # === PROGRAMAR ENVÍO CADA 30 MINUTOS ===
-schedule.every(30).minutes.do(enviar_a_todos)
+# === PROGRAMAR ENVÍO CADA 30 SEGUNDOS (para test) ===
+schedule.every(30).seconds.do(enviar_mensaje)
 
 # === AUTO-PING EN HILO SEPARADO ===
 threading.Thread(target=auto_ping, daemon=True).start()
