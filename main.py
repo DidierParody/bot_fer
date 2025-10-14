@@ -52,7 +52,7 @@ def auto_ping():
         time.sleep(600)  # 10 minutos
 
 # === PROGRAMAR ENVÍO DIARIO ===
-schedule.every(24).hours.do(enviar_mensaje)
+schedule.every(30).seconds.do(enviar_mensaje)
 
 # Enviar primer mensaje al iniciar
 enviar_mensaje()
