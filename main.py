@@ -4,11 +4,12 @@ import schedule
 import time
 import threading
 import os
+from flask import Flask
 
 # === CONFIGURACIÓN DEL BOT ===
 TOKEN = "8269117040:AAEme6PT8QprX_hW4leq2CTkn4EHtHqZ1d4"
-CHAT_ID = "5817440886"
-PING_URL = "https://tu-app.onrender.com"  # ⚠️ Reemplaza con la URL pública de tu app Render
+CHAT_ID = "5817440886"  # 💗 Chat ID de Fernanda
+PING_URL = "https://bot-fer.onrender.com"  # ⚠️ Reemplaza con la URL pública de tu app Render
 
 # === GENERAR FRASE CON GEMINI ===
 client = genai.Client(api_key="AIzaSyA1DR-hsQHYeY7ixUY3fJxJH_6Mt5yDWe0")
@@ -28,6 +29,7 @@ response = client.models.generate_content(
         "solo devuelve la frase final, lista para enviarle."
     )
 )
+
 MENSAJE = response.text
 
 # === FUNCIÓN PARA ENVIAR EL MENSAJE ===
@@ -49,23 +51,32 @@ def auto_ping():
             print(f"🔁 Auto-ping ejecutado: {res.status_code}")
         except Exception as e:
             print(f"⚠️ Error en auto-ping: {e}")
-        time.sleep(600)  # 10 minutos
+        time.sleep(600)  # cada 10 minutos
 
 # === PROGRAMAR ENVÍO DIARIO ===
-#schedule.every(24).hours.do(enviar_mensaje)
-# === PROGRAMAR ENVÍO CADA 30 SEGUNDOS (para test) ===
-schedule.every(30).seconds.do(enviar_mensaje)
+schedule.every(24).hours.do(enviar_mensaje)
 
 # Enviar primer mensaje al iniciar
 enviar_mensaje()
 
-print("🤖 Bot iniciado... enviando mensajes cada 24 horas y auto-ping activo.")
+# === SERVIDOR FLASK PARA MANTENERLO ACTIVO EN RENDER ===
+app = Flask(__name__)
 
-# === EJECUTAR AUTO-PING EN UN HILO SEPARADO ===
-threading.Thread(target=auto_ping, daemon=True).start()
+@app.route('/')
+def home():
+    return "Bot activo 💙", 200
 
-# === BUCLE PRINCIPAL ===
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+if __name__ == "__main__":
+    # Iniciar auto-ping en segundo plano
+    threading.Thread(target=auto_ping, daemon=True).start()
+    
+    print("🤖 Bot iniciado... enviando mensajes cada 24 horas y auto-ping activo.")
+    
+    # Iniciar Flask
+    threading.Thread(target=lambda: app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000))), daemon=True).start()
+
+    # Bucle principal
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
 
