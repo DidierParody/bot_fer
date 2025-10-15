@@ -40,6 +40,7 @@ def enviar_mensaje():
 
     if response.status_code == 200:
         print("✅ Mensaje enviado correctamente")
+        print(response.text)
     else:
         print("❌ Error al enviar mensaje:", response.text)
 
