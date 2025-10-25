@@ -55,15 +55,14 @@ def generar_frase():
     solo devuelve la frase final, lista para enviarle.
     """
 
+    # ✅ Ajuste a la nueva versión del cliente GenAI
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt,
-        generation_config={
-            "temperature": 0.95,       # 🔥 Más creatividad y variedad
-            "top_p": 0.9,
-            "top_k": 40,
-            "max_output_tokens": 150
-        }
+        temperature=0.95,
+        top_p=0.9,
+        top_k=40,
+        max_output_tokens=150,
     )
 
     return response.text.strip()
