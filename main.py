@@ -37,35 +37,32 @@ intenciones = [
 
 # === FUNCIÓN PARA GENERAR LA FRASE ===
 def generar_frase():
-    hoy = datetime.now().strftime("%A %d de %B %Y")
+    prompt = (
+        "María Fernanda es mi pareja, tiene 19 años y estudia educación infantil. "
+        "Ama los colores azul y negro, los peluches, las caricaturas para niños pequeños y el chocolate. "
+        "Tiene una energía nostálgica pero muy tierna. Es sensible, dulce y cariñosa, "
+        "aunque a veces duda de sí misma y aún siente el dolor de haber perdido a su mamá. "
+        "Quiero que le envíes una frase motivacional del día que la llene de vida y esperanza, "
+        "que le recuerde lo valiosa que es y le haga sentir acompañada, amada y con fuerzas para seguir sonriendo. "
+        "Usa un tono cálido, tierno y levemente romántico, con emojis suaves y delicados (🌷💙🐻✨🍫), "
+        "y si puedes, menciónala cariñosamente como 'mi reina' dentro de la frase. "
+        "No menciones que eres una IA, ni des explicaciones, ni escribas más texto del necesario; "
+        "solo devuelve la frase final, lista para enviarle."
+    )
 
-    prompt = f"""
-    Hoy es {hoy}. 
-    María Fernanda es mi pareja, tiene 19 años y estudia educación infantil.
-    Ama los colores azul y negro, los peluches, las caricaturas para niños pequeños y el chocolate.
-    Tiene una energía nostálgica pero muy tierna. Es sensible, dulce y cariñosa,
-    aunque a veces duda de sí misma y aún siente el dolor de haber perdido a su mamá.
-    Quiero que le envíes una frase motivacional del día que la llene de vida y esperanza,
-    que le recuerde lo valiosa que es y le haga sentir acompañada, amada y con fuerzas para seguir sonriendo.
-    Usa un tono cálido, tierno y levemente romántico, con emojis suaves y delicados (🌷💙🐻✨🍫),
-    y si puedes, menciónala cariñosamente como 'mi reina' dentro de la frase.
-    {random.choice(estilos)}
-    Además, {random.choice(intenciones)}.
-    No menciones que eres una IA, ni des explicaciones, ni escribas más texto del necesario;
-    solo devuelve la frase final, lista para enviarle.
-    """
-
-    # ✅ Ajuste a la nueva versión del cliente GenAI
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.0-flash",
         contents=prompt,
-        temperature=0.95,
-        top_p=0.9,
-        top_k=40,
-        max_output_tokens=150,
+        generation_config={
+            "temperature": 0.9,  # 🌈 más creatividad
+            "top_p": 0.95,
+            "top_k": 40,
+            "max_output_tokens": 150,
+        }
     )
 
     return response.text.strip()
+
 
 # === FUNCIÓN PARA ENVIAR EL MENSAJE ===
 def enviar_mensaje():
